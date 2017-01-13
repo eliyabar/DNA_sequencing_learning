@@ -187,17 +187,27 @@ def has_converged(centroids, old_centroids, iterations):
 if __name__ == '__main__':
     print("--In Main--")
 
-    full_file = read_csv_file()
-    full_file = full_file[:1000]
+    # full_file = read_csv_file()
+    # full_file = full_file[:1000]
     # print_list(full_file)
+    data_list = []
+    data_list.append("i am moshe play")
+    data_list.append("i am going to play")
+    data_list.append("i love intel")
 
-    vectorizer = CountVectorizer(max_features=200)
+    vec = CountVectorizer()
+    test = vec.fit_transform(data_list).toarray()
+    print(test)
+    print(vec.get_feature_names())
+    # print(test)
+
+    # vectorizer = CountVectorizer(max_features=200)
 
     # here we make this matrix with good scatter for EX
     # corraletion - when x gets bigger y gets bigger
 
 
-    X = vectorizer.fit_transform(full_file).toarray()
+    # X = vectorizer.fit_transform(full_file).toarray()
     # np.set_printoptions(threshold=np.nan)
     # print(X[:, 0])
     # print(X)
@@ -208,10 +218,8 @@ if __name__ == '__main__':
     # print(bag_of_words(full_file))
     # print(vectorizer.get_feature_names())
 
-    p1 = pca(X,None, num_of_reduced_features=2)
-    print(p1)
-    kmeans = KMeans(n_clusters=29, random_state=0).fit(p1)
-    print(kmeans.labels_)
+    # p1 = pca(X,None, num_of_reduced_features=2)
+    # print(kmeans.labels_)
     # pca = PCA(n_components=2)  # project from 64 to 2 dimensions
     # projected = pca.fit_transform(X)
 
