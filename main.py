@@ -1,19 +1,14 @@
-from patsy.highlevel import dmatrices
 from sklearn import metrics
-from sklearn.cross_validation import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer, ENGLISH_STOP_WORDS
 import numpy as np
 import pandas as pd
 import string
-import math
 from sklearn.decomposition import PCA
 from sklearn.linear_model import LogisticRegression
 
+PCA_FEATURES=100
 
-def read_csv_file(file=None):
-    if not file:
-        print("No file Name")
-        return
+def read_csv_file(file):
     # set of punctuations
     exclude = set(string.punctuation)
 
@@ -28,96 +23,100 @@ def read_csv_file(file=None):
         stripped_line = stripped_line.lower()
         # remove stopWords
         stripped_line = ' '.join([word for word in stripped_line.split() if word not in ENGLISH_STOP_WORDS])
-
         data_list.append(stripped_line)
 
     return df.iloc[:,3:5], data_list
 
-def print_list(list):
-    for line in list:
-        print(line)
-
-
-class LogisticReg(object):
-    pass
-
-
 if __name__ == '__main__':
     print("--In Main--")
 
+    # get the data as list and full file as DataFrame
     full_file, data = read_csv_file("res/Data_tar2.csv")
     file = full_file
 
+    # extract features (vector of all the words appear in data)
     init_vec = CountVectorizer(token_pattern='\\b\\w+\\b')
     vec = init_vec.fit_transform(data).toarray()
 
-    # print(init_vec.get_feature_names())
-    vec = pd.DataFrame(vec)
-    vec.columns = init_vec.get_feature_names()
-    vec['Category'] = file.Category
+    # convert the vector to DataFrame type
+    data_frame = pd.DataFrame(vec)
 
-    categories = sorted(set(vec['Category']))
+    # rename the columns with the feature names
+    data_frame.columns = init_vec.get_feature_names()
+
+    # add to data_frame the target column (the Category column from csv file)
+    data_frame['Category'] = file.Category
+
+    # get all the target categories
+    categories = sorted(set(data_frame['Category']))
+
+    # create map of categories to index number
     categories_map = {k: v for v, k in enumerate(categories)}
+
     # print (categories_map)
-    vec['Category'] =vec['Category'].map(categories_map)
+
+    # convert the string name to index name by the map
+    data_frame['Category'] = data_frame['Category'].map(categories_map)
+
     # print(vec)
 
-    format = 'Category ~ '
-    for col in init_vec.get_feature_names():
-        format += "%s + " % col
-    format = format[:-3]
-    # print(format)
-    # y, X = dmatrices(format, vec, return_type="dataframe")
-
-    X = vec.iloc[:,:-1]
+    # get the X matrix (without target) + add at begining more column for the constant
+    X = data_frame.iloc[:,:-1]
     X.insert(0,'Intercept',1)
     X = X.astype(float)
 
-    y = np.ravel(vec['Category'])
+    # set the target column to y
+    y = np.ravel(data_frame['Category'])
     y = y.astype(float)
 
+    # init train size
+    train_size = int(len(X.index)/2)
 
-
-
-    # X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.5, random_state=1)
-    # print(X_train)
-
-    test_size =int(len(X.index)/2)
     # print(test_size)
     # print(categories_map)
 
-    X_train = X.iloc[0:test_size]
-    X_test = X.iloc[test_size:]
+    # divide X,y for training and testing
+    X_train = X.iloc[0:train_size]
+    X_test = X.iloc[train_size:]
+    y_train = y[0:train_size]
+    y_test = y[train_size:]
 
-    y_train = y[0:test_size]
-    y_test = y[test_size:]
-
-
+    # init LogisticRegression object
     model = LogisticRegression()
+
+    # set the model for our X and y (training)
     model = model.fit(X_train,y_train)
 
+    # predict the answers for X_test
     predicted = model.predict(X_test)
-    print(predicted)
 
+    # compare the predict to true answers and return a accuracy score
     accuracy = metrics.accuracy_score(y_test, predicted)
-    print("Regular accuracy: %s" % accuracy)
 
+    # print the result
+    print("Accuracy (without PCA): %s" % accuracy)
 
+    print("Perform PCA to original X with reduction to %s features" % PCA_FEATURES)
 
-
-
-
-    pca = PCA(n_components=2)  # project from 64 to 2 dimensions
+    # init PCA object with reduction to n_components
+    pca = PCA(n_components=PCA_FEATURES)
     X_pca = pca.fit_transform(X)
 
-    X_pca_train = X_pca.iloc[0:test_size]
-    X_pca_test = X_pca.iloc[test_size:]
+    # divide X_pca for training and testing
+    X_pca_train = X_pca[0:train_size]
+    X_pca_test = X_pca[train_size:]
 
+    # init LogisticRegression object
     model_pca = LogisticRegression()
+
+    # set the model_pca for our X and y (training)
     model_pca = model_pca.fit(X_pca_train, y_train)
 
+    # predict the answers for X_test
     predicted_pca = model_pca.predict(X_pca_test)
-    print(predicted_pca)
 
+    # compare the predict to true answers and return a accuracy score
     accuracy_pca = metrics.accuracy_score(y_test, predicted_pca)
-    print("pca accuracy: %s" % accuracy_pca)
+
+    # print the result
+    print("Accuracy with PCA: %s" % accuracy_pca)
