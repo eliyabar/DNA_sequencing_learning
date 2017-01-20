@@ -1,0 +1,48 @@
+[general]
+
+# file with chromosome lengths
+# chromosomes that are not in this list won't be considered by Control-FREEC!
+chrLenFile = /home/rotemsd/Desktop/temp/hg19.len
+
+ploidy = 2
+
+# positive value of threshold for segmentation of normalized profiles
+breakPointThreshold = 0.8
+
+# make a separate fragment of this “unknown” region and do not assign any copy number to this region at all 
+breakPointType = 4
+
+# minimal number of consecutive windows to call a CNA
+minCNAlength=3
+
+window = 50000
+
+# path to the directory with chromosomes fasta files
+# (necessary to calculate a GC-content profile if a control dataset and GC-content profile are not available)
+chrFiles = /home/rotemsd/Desktop/FinalProject/inputsForFREEC/chromFa
+
+outputDir =/home/rotemsd/Desktop/outputResults//id_1_afterBWA.REF_chr1/window50000/
+# degree of polynomial
+degree=3
+
+# number of threads (multi-threading mode)
+maxThreads=6
+
+# .gem file with information about mappable positions (GEM output)
+gemMappabilityFile=/home/rotemsd/Desktop/FinalProject/inputsForFREEC/out76_hg19.gem
+
+# "sex=XY" will not annotate one copy of chr X and Y as a loss. 
+sex = XY
+
+[sample]
+
+# file with mapped reads (can be single end reads, mate-pairs or paired-end reads)
+mateFile = /home/rotemsd/Desktop/FinalProject/cellLine_HCC1954-NextSeq1_20141217_Aviad/bwa/afterBWA.REF_chr1.bam
+
+inputFormat = BAM
+
+# 0 (for single ends), RF (Illumina mate-pairs),
+# FR (Illumina paired-ends), FF (SOLiD mate-pairs) 
+mateOrientation = FR
+
+

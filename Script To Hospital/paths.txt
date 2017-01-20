@@ -1,0 +1,2 @@
+/home/rotemsd/Desktop/FinalProject/cellLine_HCC1954-NextSeq1_20141217_Aviad/bwa/afterBWA.REF_chr1.bam
+/home/rotemsd/Desktop/FinalProject/cellLine_HCC1954-NextSeq1_20141217_Aviad/bwa/afterBWA.REF_chr1.bam
