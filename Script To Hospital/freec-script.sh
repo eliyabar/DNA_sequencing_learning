@@ -4,12 +4,13 @@ DIR=$(dirname $0)
 FREEC_PATH=/home/rotemsd/Desktop/FinalProject/FREEC-9.7b/src/freec
 OUTPUT_PATH=/home/rotemsd/Desktop
 
-
+# print usage parameters
 usage()
 {
     echo "usage: [-f | --file <PATH TO FILE>]"
 }
 
+# check for arguments
 if [ "$1" == "" ]; then
 	usage
     	exit 1
@@ -46,6 +47,7 @@ fi
 
 # printf '%s\n' "${array[@]}"
 
+# create config file
 for ((i = 0; i < ${#array[@]}; ++i)); do
 
 	path=${array[$i]}
@@ -63,7 +65,7 @@ for ((i = 0; i < ${#array[@]}; ++i)); do
 
 	sed -i "s@sex =.*@sex = ${sex}@" config.txt
 
-
+    # configuration for window size 500
 	outputDir=$RESULTS_PATH/$mainfolder/window500/
 
 	mkdir $outputDir
@@ -74,7 +76,7 @@ for ((i = 0; i < ${#array[@]}; ++i)); do
 
 	$FREEC_PATH -conf ./config.txt
 
-
+    # configuration for window size 10000
 	outputDir=$RESULTS_PATH/$mainfolder/window10000/
 
 	mkdir $outputDir
@@ -85,7 +87,7 @@ for ((i = 0; i < ${#array[@]}; ++i)); do
 
 	$FREEC_PATH -conf ./config.txt
 
-
+    # configuration for window size 50000
 	outputDir=$RESULTS_PATH/$mainfolder/window50000/
 
 	mkdir $outputDir
@@ -98,33 +100,4 @@ for ((i = 0; i < ${#array[@]}; ++i)); do
 	
 done
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# end of script

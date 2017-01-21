@@ -96,7 +96,7 @@ if __name__ == '__main__':
     # predict the answers for X_test
     predicted = model.predict(X_test)
 
-    # compare the predict to true answers and return a accuracy score
+    # compare the predicted to true answers and return a accuracy score
     accuracy = metrics.accuracy_score(y_test, predicted)
 
     # print the result
@@ -111,7 +111,7 @@ if __name__ == '__main__':
     random_projection = random_projection.GaussianRandomProjection(n_components=RANDOM_PROJECTION_FEATURES)
     X_random_projection = random_projection.fit_transform(X)
 
-    # calculate the elapse time
+    # calculate the elapsed time
     elapsed = timeit.default_timer() - start_time
     # print the time
     print("Random Projection elapsed time: %s\n" % elapsed)
@@ -137,7 +137,7 @@ if __name__ == '__main__':
     # predict the answers for X_random_projection_test
     random_projection_predicted = random_projection_model.predict(X_random_projection_test)
 
-    # compare the predict to true answers and return a accuracy score
+    # compare the predicted data to the true answers and return an accuracy score
     random_projection_accuracy = metrics.accuracy_score(y_test, random_projection_predicted)
 
     print("Accuracy with Random Projection: %s\n" % random_projection_accuracy)
@@ -151,7 +151,7 @@ if __name__ == '__main__':
     pca = PCA(n_components=PCA_FEATURES)
     X_pca = pca.fit_transform(X)
 
-    # calculate the elapse time
+    # calculate the elapsed time
     elapsed = timeit.default_timer() - start_time
     # print the time
     print("PCA elapsed time: %s\n" % elapsed)
@@ -169,7 +169,7 @@ if __name__ == '__main__':
     # set the model_pca for our X and y (training)
     pca_model = pca_model.fit(X_pca_train, y_train)
 
-    # calculate the elapse time
+    # calculate the elapse dtime
     elapsed = timeit.default_timer() - start_time
     # print the time
     print("Logistic Regression with PCA elapsed time: %s" % elapsed)
@@ -177,7 +177,7 @@ if __name__ == '__main__':
     # predict the answers for X_pca_test
     pca_predicted = pca_model.predict(X_pca_test)
 
-    # compare the predict to true answers and return a accuracy score
+    # compare the predicted to true answers and return a accuracy score
     pca_accuracy = metrics.accuracy_score(y_test, pca_predicted)
 
     # print the result
