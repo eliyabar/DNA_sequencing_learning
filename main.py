@@ -71,7 +71,7 @@ if __name__ == '__main__':
     y = y.astype(float)
 
     # init train size
-    train_size = int(len(X.index)/2)
+    train_size = int(len(X.index)*0.8)
 
     # divide X,y for training and testing
     X_train = X.iloc[0:train_size]
@@ -182,3 +182,85 @@ if __name__ == '__main__':
 
     # print the result
     print("Accuracy with PCA: %s" % pca_accuracy)
+=======
+    # print("Perform Random Projection to original X with reduction to %s features" % RANDOM_PROJECTION_FEATURES)
+    #
+    # # init start time variable for measurement time execution
+    # start_time = timeit.default_timer()
+    #
+    # # init Random Projection object with reduction to n_components
+    # random_projection = random_projection.GaussianRandomProjection(n_components=RANDOM_PROJECTION_FEATURES)
+    # X_random_projection = random_projection.fit_transform(X)
+    #
+    # # calculate the elapse time
+    # elapsed = timeit.default_timer() - start_time
+    # # print the time
+    # print("Random Projection elapsed time: %s\n" % elapsed)
+    #
+    # # divide X_random_projection for training and testing
+    # X_random_projection_train = X_random_projection[0:train_size]
+    # X_random_projection_test = X_random_projection[train_size:]
+    #
+    # # init start time variable for measurement time execution
+    # start_time = timeit.default_timer()
+    #
+    # # init LogisticRegression object
+    # random_projection_model = LogisticRegression()
+    #
+    # # set the model for our X and y (training)
+    # random_projection_model = random_projection_model.fit(X_random_projection_train, y_train)
+    #
+    # # calculate the elapse time
+    # elapsed = timeit.default_timer() - start_time
+    # # print the time
+    # print("Logistic Regression with Random Projection elapsed time: %s" % elapsed)
+    #
+    # # predict the answers for X_random_projection_test
+    # random_projection_predicted = random_projection_model.predict(X_random_projection_test)
+    #
+    # # compare the predict to true answers and return a accuracy score
+    # random_projection_accuracy = metrics.accuracy_score(y_test, random_projection_predicted)
+    #
+    # print("Accuracy with Random Projection: %s\n" % random_projection_accuracy)
+    #
+    # print("Perform PCA to original X with reduction to %s features" % PCA_FEATURES)
+    #
+    # # init start time variable for measurement time execution
+    # start_time = timeit.default_timer()
+    #
+    # # init PCA object with reduction to n_components
+    # pca = PCA(n_components=PCA_FEATURES)
+    # X_pca = pca.fit_transform(X)
+    #
+    # # calculate the elapse time
+    # elapsed = timeit.default_timer() - start_time
+    # # print the time
+    # print("PCA elapsed time: %s\n" % elapsed)
+    #
+    # # divide X_pca for training and testing
+    # X_pca_train = X_pca[0:train_size]
+    # X_pca_test = X_pca[train_size:]
+    #
+    # # init start time variable for measurement time execution
+    # start_time = timeit.default_timer()
+    #
+    # # init LogisticRegression object
+    # pca_model = LogisticRegression()
+    #
+    # # set the model_pca for our X and y (training)
+    # pca_model = pca_model.fit(X_pca_train, y_train)
+    #
+    # # calculate the elapse time
+    # elapsed = timeit.default_timer() - start_time
+    # # print the time
+    # print("Logistic Regression with PCA elapsed time: %s" % elapsed)
+    #
+    # # predict the answers for X_pca_test
+    # pca_predicted = pca_model.predict(X_pca_test)
+    #
+    # # compare the predict to true answers and return a accuracy score
+    # pca_accuracy = metrics.accuracy_score(y_test, pca_predicted)
+    #
+    # # print the result
+    # print("Accuracy with PCA: %s" % pca_accuracy)
+>>>>>>> Stashed changes
