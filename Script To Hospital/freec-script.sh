@@ -74,7 +74,9 @@ for ((i = 0; i < ${#array[@]}; ++i)); do
 
 	sed -i "s@outputDir =.*@outputDir =${outputDir}@" config.txt
 
-	$FREEC_PATH -conf ./config.txt
+	cp config.txt $outputDir/config_w500.txt
+
+	$FREEC_PATH -conf $outputDir/config_w500.txt
 
     # configuration for window size 10000
 	outputDir=$RESULTS_PATH/$mainfolder/window10000/
@@ -85,7 +87,9 @@ for ((i = 0; i < ${#array[@]}; ++i)); do
 
 	sed -i "s@outputDir =.*@outputDir =${outputDir}@" config.txt
 
-	$FREEC_PATH -conf ./config.txt
+	cp config.txt $outputDir/config_w10000.txt
+
+	$FREEC_PATH -conf $outputDir/config_w10000.txt
 
     # configuration for window size 50000
 	outputDir=$RESULTS_PATH/$mainfolder/window50000/
@@ -96,7 +100,9 @@ for ((i = 0; i < ${#array[@]}; ++i)); do
 
 	sed -i "s@outputDir =.*@outputDir =${outputDir}@" config.txt
 
-	$FREEC_PATH -conf ./config.txt
+	cp config.txt $outputDir/config_w50000.txt
+
+	$FREEC_PATH -conf $outputDir/config_w50000.txt
 	
 done
 
