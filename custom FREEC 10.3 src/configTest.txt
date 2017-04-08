@@ -1,0 +1,56 @@
+[general]
+
+# file with chromosome lengths
+# chromosomes that are not in this list won't be considered by Control-FREEC!
+chrLenFile = /media/debian/drive/hg19c2.len
+
+ploidy = 2
+
+# positive value of threshold for segmentation of normalized profiles
+breakPointThreshold = 0.8
+
+# make a separate fragment of this “unknown” region and do not assign any copy number to this region at all 
+breakPointType = 4
+
+# minimal number of consecutive windows to call a CNA
+minCNAlength=4
+
+
+#********************
+window = 5000
+
+#step = 0
+
+outputDir = /media/debian/drive/out/minCNVTest/5000-4
+#********************
+
+
+# path to the directory with chromosomes fasta files
+# (necessary to calculate a GC-content profile if a control dataset and GC-content profile are not available)
+chrFiles = /media/debian/drive/chromFa
+
+
+
+# degree of polynomial
+degree=3
+
+# number of threads (multi-threading mode)
+maxThreads=6
+
+# .gem file with information about mappable positions (GEM output)
+gemMappabilityFile=/media/debian/drive/out76_hg19.gem
+
+# "sex=XY" will not annotate one copy of chr X and Y as a loss. 
+sex=XY
+
+[sample]
+
+# file with mapped reads (can be single end reads, mate-pairs or paired-end reads)
+#mateFile = /home/debian/Desktop/DNA/bwa/afterBWA.REF_chr1.bam
+mateFile = /home/debian/Desktop/DNA/bwa/afterBWA.REF_chr2.bam
+
+inputFormat = BAM
+
+# 0 (for single ends), RF (Illumina mate-pairs),
+# FR (Illumina paired-ends), FF (SOLiD mate-pairs) 
+mateOrientation = FR
