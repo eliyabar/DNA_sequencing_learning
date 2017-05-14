@@ -11,3 +11,4 @@ Right now we are in Prototype stage, and just learning our tools before using th
 - main.py - will be the implementation of PCA, Logistic Regression and Random Projection.
 - res/Data_tar2.csv - will be large amount of data in csv file, to mimic the large amount of data we have in a single DNA file.
 - /Script To Hospital - will contain the script we built to extract the data from DNA files. 
+- /VectorToHistograms - Will convert SAMPLE file that was extracted from BAM file with FREEC to Histogram.
