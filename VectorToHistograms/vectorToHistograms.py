@@ -86,11 +86,22 @@ def create_excel_file_with_graph(data, index_names, file_name):
 
 
 if __name__ == '__main__':
-
-    normalized_array = normalize(open_file("full_file.cpn"))
-    print("Normalized Array:\n", normalized_array)
+    ds = dirScanner("\FREEC_OUT2", "cpn")
+    normal_paths, toumor_paths = ds.get_paths()
 
     index_names = create_index_names()
+    index = 0
+    for path in normal_paths:
+        print("Working on ", path)
+        normalized_array = normalize(open_file(path))
+        create_excel_file_with_graph(normalized_array, index_names, "output_normal" + str(index) + ".xlsx")
+        index += 1
 
-    create_excel_file_with_graph(normalized_array, index_names, "output.xlsx")
+    index = 0
+    for path in toumor_paths:
+        print("Working on ", path)
+        normalized_array = normalize(open_file(path))
+        create_excel_file_with_graph(normalized_array, index_names, "output_toumor" + str(index) + ".xlsx")
+        index += 1
+
 
