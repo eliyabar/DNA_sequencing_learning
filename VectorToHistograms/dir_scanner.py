@@ -1,17 +1,23 @@
 import os
-class dirScanner:
 
+
+# Will return path of '.extension' files splitted into toumor and normal lists of paths
+class dirScanner:
     def __init__(self, path, extension):
         self._path = path
         self._extension = extension
-        self._paths = []
-        self.get_paths()
+        self._paths_normal = []
+        self._paths_toumor = []
 
     def get_paths(self):
-        print("Scanning for " + self._extension + " files in : " + self._path)
+        print("Scanning for ." + self._extension + " files in : " + self._path)
         for root, dirs, files in os.walk(self._path):
             for file in files:
                 if file.endswith("." + self._extension):
-                    self._paths.append(os.path.join(root, file))
+                    path = os.path.join(root, file)
+                    if "normal" in path:
+                        self._paths_normal.append(path)
+                    else:
+                        self._paths_toumor.append(path)
 
-        print (self._paths)
+        return self._paths_normal, self._paths_toumor
