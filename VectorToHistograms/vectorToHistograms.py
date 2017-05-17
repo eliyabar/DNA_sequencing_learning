@@ -1,3 +1,4 @@
+from dir_scanner import dirScanner
 import math
 import numpy as np
 import pandas as pd
@@ -38,14 +39,26 @@ def normalize(array):
 
     return array
 
+def create_index_names():
+    col_names = []
+    col_index = 0
+    while col_index < max_hits:
+        col_str = str(int(col_index)) + '_'
+        col_index += (max_hits / (math.pow(10, math.log10(n))))
+        col_str += str(int(col_index))
+        col_names.append(col_str)
+    col_names[-1] += '+'
+    return list(col_names)
+
+
 normalized_array = normalize(array)
 print("Normalized Array:\n", normalized_array)
 
+print(create_index_names())
+print(len(normalized_array), len(create_index_names()))
 
-df = pd.DataFrame(normalized_array, columns=[1.100])
+
+
+
+df = pd.DataFrame(normalized_array, index=create_index_names())
 print(df)
-writer = pd.ExcelWriter('output.xlsx')
-df.to_excel(writer)
-writer.save()
-
-
