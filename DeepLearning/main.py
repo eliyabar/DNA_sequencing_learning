@@ -3,26 +3,45 @@ from extract_features import ExtractFeatures
 from prepare_data import PrepareData
 import numpy as np
 import os
+import pandas as pd
 
 DATA_FILES_PATH = "../DataSavedInCSV"
 
 
-def save_matrix_to_csv_file(file_name, data):
-    np.savetxt(os.path.join(DATA_FILES_PATH,file_name), data, delimiter=",", fmt='%10.5f')
-
-
-def load_matrix_from_csv_file(file_name):
-    return np.genfromtxt(os.path.join(DATA_FILES_PATH,file_name), delimiter=',', dtype=int)
-
-
-if __name__ == '__main__':
+def save_all_data_to_CSVs():
 
     data = PrepareData("D:\FinalProject\FREEC_OUT2", union_window_number=500)
     x_data, y_data = data.get_matrix()
-    save_matrix_to_csv_file("x_data_window_50000.csv", x_data)
-    save_matrix_to_csv_file("y_data_window_50000.csv", y_data)
-    print(len(x_data))
-    print(len(x_data[0]))
+    headers = data.get_columns_name_list()
+    np.savetxt(os.path.join(DATA_FILES_PATH, "x_data_window_50000.csv"), x_data, delimiter=",", fmt='%10.5f', header=headers, comments="")
+    np.savetxt(os.path.join(DATA_FILES_PATH, "y_data.csv"), y_data, delimiter=",", fmt='%10.5f', header="y", comments="")
+
+    data = PrepareData("D:\FinalProject\FREEC_OUT2", union_window_number=100)
+    x_data, y_data = data.get_matrix()
+    np.savetxt(os.path.join(DATA_FILES_PATH, "x_data_window_10000.csv"), x_data, delimiter=",", fmt='%10.5f')
+
+    data = PrepareData("D:\FinalProject\FREEC_OUT2", union_window_number=10)
+    x_data, y_data = data.get_matrix()
+    np.savetxt(os.path.join(DATA_FILES_PATH, "x_data_window_1000.csv"), x_data, delimiter=",", fmt='%10.5f')
+
+    data = PrepareData("D:\FinalProject\FREEC_OUT2", union_window_number=1)
+    x_data, y_data = data.get_matrix()
+    np.savetxt(os.path.join(DATA_FILES_PATH, "x_data_window_100.csv"), x_data, delimiter=",", fmt='%10.5f')
+
+
+def load_data_from_csv_file(file_name):
+    # return np.genfromtxt(os.path.join(DATA_FILES_PATH,file_name), delimiter=',', dtype=int)
+    return pd.read_csv(os.path.join(DATA_FILES_PATH,file_name), dtype=int)
+
+if __name__ == '__main__':
+
+    # save all data to CSV files
+    save_all_data_to_CSVs()
+
+
+    # # get data from CSV
+    # dataframe = load_data_from_csv_file("x_data_window_50000.csv")
+    # print(dataframe)
 
     # index = [1, 2, 3, 4, 5, 6, 7]
     # dtype = [('a', 'int32'), ('b', 'float32'), ('c', 'float32')]

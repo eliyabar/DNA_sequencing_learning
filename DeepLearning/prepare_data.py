@@ -18,11 +18,10 @@ class PrepareData:
         print("init finished")
 
     def _create_columns_name_list(self):
-        columns_name = list()
+        columns_name = ""
         for index in range(self._vector_length):
-            string = str(index*self._columns_base_name) + "_" + str((index+1)*self._columns_base_name)
-            columns_name.append(string)
-        return columns_name
+            columns_name += str(index*self._columns_base_name) + "_" + str((index+1)*self._columns_base_name) + ","
+        return columns_name[:-1]
 
     def _get_value_list(self, path):
         value_list = []
