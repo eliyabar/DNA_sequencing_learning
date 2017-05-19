@@ -49,7 +49,7 @@ class PrepareData:
             value_list = self._get_value_list(path)
             if len(value_list) > 0:
                 x_matrix.append(value_list)
-                y.append(1)
+                y.append(0)
 
         return np.asarray(x_matrix), np.asarray(y)
 
