@@ -103,7 +103,7 @@ if __name__ == '__main__':
 
     index_names = create_index_names()
 
-    ds = dirScanner("\\\\192.168.1.16\Public\FREEC_OUT2", "cpn")
+    ds = dirScanner("\\\\Public\FREEC_OUT2", "cpn")
     normal_paths, toumor_paths = ds.get_paths()
 
     #  Option 1 - if we want to print each  cpn to excel file with graph.
