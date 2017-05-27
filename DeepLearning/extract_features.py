@@ -9,14 +9,13 @@ class ExtractFeatures:
         self._y_data = y_data
         self._num_of_features = num_of_features
         self.extract_features()
+        self._all_features = list(self._x_data)
+        self._selected_features = []
+        print("Extract features completed")
 
     def extract_features(self):
         i = 0
-        self._all_features = list(self._x_data)
-        print(self._all_features)
-        self._selected_features = []
         logistic_object = LogisticRegression()
-
         while i < self._num_of_features:
             tested_features = list(set(self._all_features) - set(self._selected_features))
             max_score = 0
@@ -32,7 +31,12 @@ class ExtractFeatures:
                 if score > max_score:
                     max_score = score
                     selected_feature = feature
+                if max_score == 1.0:
+                    break
 
             self._selected_features.append(selected_feature)
-            print("finish: ", self._selected_features)
+            # print("finish: ", self._selected_features)
             i += 1
+
+    def get_extracted_features(self):
+        return self._x_data[self._selected_features]

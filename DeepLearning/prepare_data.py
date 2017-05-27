@@ -1,11 +1,13 @@
 from dir_scanner import dirScanner
 import numpy as np
+import warnings
 
 
 class PrepareData:
 
     WINDOW_SIZE = 100
     ORIGINAL_VECTOR_LENGTH = 30956785
+    NORMALIZE_CONSTANT = 3
 
     def __init__(self, path_to_data, union_window_number=1):
         self._path = path_to_data
@@ -23,6 +25,22 @@ class PrepareData:
             columns_name += str(index*self._columns_base_name) + "_" + str((index+1)*self._columns_base_name) + ","
         return columns_name[:-1]
 
+    def _normalize_vector(self, array):
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", category=RuntimeWarning)
+            std = np.std(array)
+            mean = np.mean(array)
+        for i in range(len(array)):
+            normalized_num = (array[i] - mean) / std
+            if normalized_num > self.NORMALIZE_CONSTANT:
+                normalized_num = self.NORMALIZE_CONSTANT
+            elif normalized_num < -self.NORMALIZE_CONSTANT:
+                normalized_num = -self.NORMALIZE_CONSTANT
+
+            array[i] = normalized_num
+
+        return array
+
     def _get_value_list(self, path):
         value_list = []
         with open(path, 'r') as file:
@@ -31,18 +49,18 @@ class PrepareData:
                 value = int(line.split("\t")[-1])
                 value_list.append(value)
         if self._union_win_number > 1:
-            return np.add.reduceat(value_list, np.arange(0, len(value_list), self._union_win_number))
-        else:
-            return value_list
+            value_list = np.add.reduceat(value_list, np.arange(0, len(value_list), self._union_win_number))
+        return self._normalize_vector(value_list)
 
     def get_matrix(self):
         x_matrix = []
         y = []
-        for path in self._normal_paths:
-            value_list = self._get_value_list(path)
-            if len(value_list) > 0:
-                x_matrix.append(value_list)
-                y.append(1)
+        for i in range(10):
+            for path in self._normal_paths:
+                value_list = self._get_value_list(path)
+                if len(value_list) > 0:
+                    x_matrix.append(value_list)
+                    y.append(1)
 
         for path in self._tumor_paths:
             value_list = self._get_value_list(path)
