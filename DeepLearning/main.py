@@ -39,21 +39,21 @@ def load_data_from_csv_file(file_name):
 
 if __name__ == '__main__':
 
-    # save all data to CSV files
-    save_all_data_to_CSVs()
+    # # save all data to CSV files
+    # save_all_data_to_CSVs()
 
-    # # init start time variable for measurement time execution
-    # start_time = timeit.default_timer()
-    #
-    # # get data from CSV
-    # x_df = load_data_from_csv_file("x_data_window_1000.csv")
-    # y_df = np.ravel(load_data_from_csv_file("y_data.csv"))
-    #
-    # # calculate the elapsed time
-    # elapsed = timeit.default_timer() - start_time
-    # print("load data from csv file: %s\n" % elapsed)
-    #
-    # x_df = x_df.iloc[:, :10]
-    # print(x_df)
-    #
-    # # extract = ExtractFeatures(x_df, y_df, num_of_features=10)
+    # init start time variable for measurement time execution
+    start_time = timeit.default_timer()
+
+    # get data from CSV
+    x_df = load_data_from_csv_file("x_data_window_100.csv")
+    y_df = np.ravel(load_data_from_csv_file("y_data.csv"))
+
+    # calculate the elapsed time
+    elapsed = timeit.default_timer() - start_time
+    print("load data from csv file: %s\n" % elapsed)
+
+    x_df = x_df.iloc[:, :10]
+    print(x_df)
+
+    # extract = ExtractFeatures(x_df, y_df, num_of_features=10)
