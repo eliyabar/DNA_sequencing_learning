@@ -39,6 +39,7 @@ def load_data_from_csv_file(file_name):
     return pd.read_csv(os.path.join(DATA_FILES_PATH,file_name), dtype=int)
 
 
+
 # =======================
 #     MENUS FUNCTIONS
 # =======================
@@ -46,9 +47,11 @@ def load_data_from_csv_file(file_name):
 # Main menu
 def show_menu():
     print("Please choose the menu you want to start:")
-    print("1. extract 50 features")
-    print("2. run k-means")
-    print("3. discover the main affect features")
+    print("1. Extract 50 features")
+    print("2. Run k-means")
+    print("3. Discover the main affect features")
+    print("4. Run logistic Regression")
+    print("5. Run logistic Regression on histograms")
     choice = input(" >>  ")
     exec_menu(choice)
     return
@@ -110,6 +113,33 @@ def menu_discover_affect_features():
     extract_df.get_extracted_features()
 
 
+def menu_run_logistic():
+    print("menu_run_logistic")
+    # get data from CSV
+    x_df = load_data_from_csv_file("x_data_window_50000.csv")
+    y_df = np.ravel(load_data_from_csv_file("y_data.csv"))
+
+    # logistic_object = LogisticRegression(class_weight={1: 0.9, 0: 0.1})
+    logistic_object = LogisticRegression()
+    logistic_object.fit(x_df, y_df)
+    score = logistic_object.score(x_df, y_df)
+
+    print("score: " + str(score))
+
+
+def menu_run_logistic_on_histogram():
+    print("menu_run_logistic_on_histogram")
+    # get data from CSV
+    x_df = load_data_from_csv_file("x_data_window_50000.csv")
+    y_df = np.ravel(load_data_from_csv_file("y_data.csv"))
+
+    logistic_object = LogisticRegression()
+    logistic_object.fit(x_df, y_df)
+    score = logistic_object.score(x_df, y_df)
+
+    print("score: " + str(score))
+
+
 # Exit program
 def exit():
     sys.exit()
@@ -124,6 +154,8 @@ menu_actions = {
     '1': menu_extract_features,
     '2': menu_k_means,
     '3': menu_discover_affect_features,
+    '4': menu_run_logistic,
+    '5': menu_run_logistic_on_histogram,
     '9': exit,
 }
 
