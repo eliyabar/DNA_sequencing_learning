@@ -3,12 +3,13 @@ import math
 import numpy as np
 import pandas as pd
 
-
 # maximum number (of hits) that we can get in a line.
 max_hits = 1000
 # number of cells
 n = 100
 max_normalize = 3
+graph_jump = 0.1
+arr_size = int((max_normalize/graph_jump)*2)
 
 
 def open_file(path):
@@ -20,7 +21,7 @@ def open_file(path):
                 array[n - 1] += 1
             else:
                 array[index] += 1
-    return array
+    return array[:20]
 
 
 def normalize(array):
@@ -36,6 +37,7 @@ def normalize(array):
         array[i] = normalized_num
 
     return array
+
 
 def create_index_names():
     col_names = []
@@ -87,24 +89,51 @@ def all_to_one_excel_file(paths, indexes, file_name):
     writer = pd.ExcelWriter(file_name, engine='xlsxwriter')
 
     df = pd.DataFrame()
-    df['index'] = indexes
+    df['index'] = indexes[:20]
 
     for path in paths:
         print("working on: ", path)
         normalized_array = normalize(open_file(path))
+        # print(normalized_array)
+        # print(path.split('\\')[-1])
         df[path.split('\\')[-1]] = normalized_array
 
     df.to_excel(writer, sheet_name='Sheet1', index=False)
     writer.save()
     print("File ", file_name, " Saved")
 
+# TODO : use float, cast by dtype
+def normlize_vector(path):
+    print("normlize_vector")
+
+    data = pd.read_csv(path, sep="\t", header=None)[2]
+    mean_val = data.mean()
+    std_val = data.std()
+    print("mean : ", mean_val, " std : ", std_val)
+    data.apply(lambda row: normalize_value(row, mean_val, std_val))
+    return data
+
+
+def normalize_value(val, mean, sdt):
+    norm_val = (val - mean) / sdt
+    if norm_val > max_normalize:
+        norm_val = max_normalize
+    elif norm_val < -max_normalize:
+        norm_val = -max_normalize
+    print("val : ", val, " norm val: ", norm_val)
+    return norm_val
+
+def make_histogram_from_df(vector_df):
+    histogram_arr = [0] * arr_size
+    for row in vector_df:
+        print(row)
+    return
+
 
 if __name__ == '__main__':
-
-    index_names = create_index_names()
-
-    ds = dirScanner("\\\\Public\FREEC_OUT2", "cpn")
-    normal_paths, toumor_paths = ds.get_paths()
+    # index_names = create_index_names()
+    # ds = dirScanner("\\\\192.168.1.12\Public\FREEC_OUT2", "cpn")
+    # normal_paths, toumor_paths = ds.get_paths()
 
     #  Option 1 - if we want to print each  cpn to excel file with graph.
 
@@ -119,5 +148,8 @@ if __name__ == '__main__':
     #     create_excel_file_with_graph(normalized_array, index_names, path.split('\\')[-1] + ".xlsx")
 
     # Option 2 - all cpn files are in one excel file without graph
-    all_to_one_excel_file(normal_paths, index_names, "output_of_normal.xlsx")
-    all_to_one_excel_file(toumor_paths, index_names, "output_of_toumor.xlsx")
+    # all_to_one_excel_file(normal_paths, index_names, "output_of_normal.xlsx")
+    # all_to_one_excel_file(toumor_paths, index_names, "output_of_toumor.xlsx")
+
+    normlize_vector(
+        "\\\\192.168.1.12\\Public\\FREEC_OUT2\\OUT_ICGC\\id_8_ICGC_normal_FI51715\window100\\ICGC_normal_FI51715.bam_sample.cpn")
