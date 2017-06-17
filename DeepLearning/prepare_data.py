@@ -16,7 +16,8 @@ class PrepareData:
         self._vector_length = np.math.ceil(self.ORIGINAL_VECTOR_LENGTH / union_window_number)
         ds = dirScanner(path_to_data, "cpn")
         self._normal_paths, self._tumor_paths = ds.get_paths()
-        self._columns_name_list = self._create_columns_name_list()
+        # self._columns_name_list = self._create_columns_name_list()
+        self._columns_name_list = ""
         print("init finished")
 
     def _create_columns_name_list(self):
@@ -26,6 +27,7 @@ class PrepareData:
         return columns_name[:-1]
 
     def _normalize_vector(self, array):
+        normalized_array = [None]*len(array)
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", category=RuntimeWarning)
             std = np.std(array)
@@ -36,31 +38,48 @@ class PrepareData:
                 normalized_num = self.NORMALIZE_CONSTANT
             elif normalized_num < -self.NORMALIZE_CONSTANT:
                 normalized_num = -self.NORMALIZE_CONSTANT
+            normalized_array[i] = normalized_num
 
-            array[i] = normalized_num
-
-        return array
+        return normalized_array
 
     def _get_value_list(self, path):
         value_list = []
+        temp_list = []
+        columns_name = ""
+        current_chromosome = '1'
         with open(path, 'r') as file:
             lines = file.readlines()
             for line in lines:
-                value = int(line.split("\t")[-1])
-                value_list.append(value)
-        if self._union_win_number > 1:
-            value_list = np.add.reduceat(value_list, np.arange(0, len(value_list), self._union_win_number))
+                lines_values = line.split("\t")
+                chromosome = lines_values[0]
+                value = int(lines_values[-1])
+                if chromosome == current_chromosome:
+                    temp_list.append(value)
+                    last_position = lines_values[1]
+                else:
+                    temp_list = np.add.reduceat(temp_list, np.arange(0, len(temp_list), self._union_win_number))
+                    last = len(temp_list) - 1
+                    for index, temp in enumerate(temp_list):
+                        value_list.append(temp)
+                        if index == last:
+                            end_pos = last_position
+                        else:
+                            end_pos = str((index+1)*self._columns_base_name)
+                        columns_name += current_chromosome + "_" + str(index*self._columns_base_name) + "_" + end_pos + ","
+                    temp_list = []
+                    temp_list.append(value)
+                    current_chromosome = chromosome
+        self._columns_name_list = columns_name[:-1]
         return self._normalize_vector(value_list)
 
     def get_matrix(self):
         x_matrix = []
         y = []
-        for i in range(10):
-            for path in self._normal_paths:
-                value_list = self._get_value_list(path)
-                if len(value_list) > 0:
-                    x_matrix.append(value_list)
-                    y.append(1)
+        for path in self._normal_paths:
+            value_list = self._get_value_list(path)
+            if len(value_list) > 0:
+                x_matrix.append(value_list)
+                y.append(1)
 
         for path in self._tumor_paths:
             value_list = self._get_value_list(path)

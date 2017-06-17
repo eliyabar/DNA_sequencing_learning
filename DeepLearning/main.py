@@ -16,19 +16,19 @@ def save_all_data_to_CSVs():
     data = PrepareData("D:\FinalProject\FREEC_OUT2", union_window_number=500)
     x_data, y_data = data.get_matrix()
     headers = data.get_columns_name_list()
-    np.savetxt(os.path.join(DATA_FILES_PATH, "x_data_window_1000.csv"), x_data, delimiter=",", fmt='%10.5f', header=headers, comments="")
+    np.savetxt(os.path.join(DATA_FILES_PATH, "x_data_window_50000_normalized.csv"), x_data, delimiter=",", fmt='%10.5f', header=headers, comments="")
     np.savetxt(os.path.join(DATA_FILES_PATH, "y_data.csv"), y_data, delimiter=",", fmt='%10.5f', header="y", comments="")
 
-    # data = PrepareData("D:\FinalProject\FREEC_OUT2", union_window_number=100)
-    # x_data, y_data = data.get_matrix()
-    # headers = data.get_columns_name_list()
-    # np.savetxt(os.path.join(DATA_FILES_PATH, "x_data_window_10000.csv"), x_data, delimiter=",", fmt='%10.5f', header=headers, comments="")
-    #
-    # data = PrepareData("D:\FinalProject\FREEC_OUT2", union_window_number=10)
-    # x_data, y_data = data.get_matrix()
-    # headers = data.get_columns_name_list()
-    # np.savetxt(os.path.join(DATA_FILES_PATH, "x_data_window_1000.csv"), x_data, delimiter=",", fmt='%10.5f', header=headers, comments="")
-    #
+    data = PrepareData("D:\FinalProject\FREEC_OUT2", union_window_number=100)
+    x_data, y_data = data.get_matrix()
+    headers = data.get_columns_name_list()
+    np.savetxt(os.path.join(DATA_FILES_PATH, "x_data_window_10000_normalized.csv"), x_data, delimiter=",", fmt='%10.5f', header=headers, comments="")
+
+    data = PrepareData("D:\FinalProject\FREEC_OUT2", union_window_number=10)
+    x_data, y_data = data.get_matrix()
+    headers = data.get_columns_name_list()
+    np.savetxt(os.path.join(DATA_FILES_PATH, "x_data_window_1000_normalized.csv"), x_data, delimiter=",", fmt='%10.5f', header=headers, comments="")
+
     # data = PrepareData("D:\FinalProject\FREEC_OUT2", union_window_number=1)
     # x_data, y_data = data.get_matrix()
     # headers = data.get_columns_name_list()
@@ -54,6 +54,7 @@ def show_menu():
     print("4. Run Logistic Regression")
     print("5. Run Logistic Regression on histograms")
     print("6. Run Logistic Regression with 80% train and 20% test")
+    print("8. Save to files")
     print("9. Exit")
     choice = input(" >>  ")
     exec_menu(choice)
@@ -66,8 +67,7 @@ def exec_menu(choice):
     try:
         menu_actions[ch]()
     except KeyError:
-        print
-        "Invalid selection, please try again.\n"
+        print("Invalid selection, please try again.\n")
         show_menu()
     return
 
@@ -195,6 +195,7 @@ menu_actions = {
     '4': menu_run_logistic,
     '5': menu_run_logistic_on_histogram,
     '6': menu_run_logistic_train_and_test,
+    '8': save_all_data_to_CSVs,
     '9': exit,
 }
 
