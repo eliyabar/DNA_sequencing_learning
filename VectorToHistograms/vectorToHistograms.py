@@ -9,7 +9,8 @@ max_hits = 1000
 n = 100
 max_normalize = 3
 graph_jump = 0.1
-arr_size = int((max_normalize/graph_jump)*2)
+decimal_points_round = 1
+arr_size = int((max_normalize / graph_jump) * 2) + 1
 
 
 def open_file(path):
@@ -102,6 +103,7 @@ def all_to_one_excel_file(paths, indexes, file_name):
     writer.save()
     print("File ", file_name, " Saved")
 
+
 # TODO : use float, cast by dtype
 def normlize_vector(path):
     print("normlize_vector")
@@ -110,7 +112,8 @@ def normlize_vector(path):
     mean_val = data.mean()
     std_val = data.std()
     print("mean : ", mean_val, " std : ", std_val)
-    data.apply(lambda row: normalize_value(row, mean_val, std_val))
+    data = data.apply(lambda row: normalize_value(row, mean_val, std_val))
+    # print(data)
     return data
 
 
@@ -120,14 +123,26 @@ def normalize_value(val, mean, sdt):
         norm_val = max_normalize
     elif norm_val < -max_normalize:
         norm_val = -max_normalize
-    print("val : ", val, " norm val: ", norm_val)
+    # print("val : ", val, " norm val: ", norm_val)
     return norm_val
+
 
 def make_histogram_from_df(vector_df):
     histogram_arr = [0] * arr_size
     for row in vector_df:
-        print(row)
-    return
+        # graph_idx = int(round((round(row, decimal_points_round)/graph_jump), decimal_points_round))
+        graph_idx = int(round(row/graph_jump, decimal_points_round))
+        # print("row: ", row, " after round: ", round(row, decimal_points_round), " after div: ", round(row/graph_jump, decimal_points_round), " pre index: ", graph_idx, " make int: ", )
+        # print(int(max_normalize/graph_jump) + graph_idx)
+        histogram_arr[int(max_normalize / graph_jump) + graph_idx] += 1
+    return histogram_arr
+
+
+def make_test():
+    test_data = np.arange(-max_normalize, max_normalize + graph_jump, graph_jump)
+    # test_data[30] = 0
+    print(test_data)
+    print(make_histogram_from_df(test_data))
 
 
 if __name__ == '__main__':
@@ -151,5 +166,17 @@ if __name__ == '__main__':
     # all_to_one_excel_file(normal_paths, index_names, "output_of_normal.xlsx")
     # all_to_one_excel_file(toumor_paths, index_names, "output_of_toumor.xlsx")
 
-    normlize_vector(
+    norm_data = normlize_vector(
         "\\\\192.168.1.12\\Public\\FREEC_OUT2\\OUT_ICGC\\id_8_ICGC_normal_FI51715\window100\\ICGC_normal_FI51715.bam_sample.cpn")
+    print(make_histogram_from_df(norm_data))
+    print(norm_data)
+    # Testings
+    # make_test()
+    #
+    # nnnum = 1.5699878
+    # print(round(nnnum, 1))
+    # print(round(nnnum, 1) / graph_jump)
+    #
+    # print(round(nnnum / graph_jump, 1))
+    # print(round((round(nnnum, 1) / graph_jump), 1))
+    # print(int(round((round(nnnum, 1) / graph_jump), 1)))
