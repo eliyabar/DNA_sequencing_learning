@@ -29,7 +29,7 @@ class ExtractFeatures:
                 temp_x_df = self._x_data[temp_selected_features].copy()
                 # print(temp_x_df)
                 logistic_object.fit(temp_x_df, self._y_data, sample_weight=self._sample_weigth)
-                score = logistic_object.score(temp_x_df, self._y_data)
+                score = logistic_object.score(temp_x_df, self._y_data, sample_weight=self._sample_weigth)
                 if score > max_score:
                     max_score = score
                     selected_feature = feature

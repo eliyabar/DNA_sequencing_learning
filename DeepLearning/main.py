@@ -4,6 +4,7 @@ from sklearn.cluster import KMeans
 from prepare_data import PrepareData
 import numpy as np
 import pandas as pd
+from sklearn import metrics
 import timeit
 import sys, os
 
@@ -34,9 +35,9 @@ def save_all_data_to_CSVs():
     # np.savetxt(os.path.join(DATA_FILES_PATH, "x_data_window_100.csv"), x_data, delimiter=",", fmt='%10.5f', header=headers, comments="")
 
 
-def load_data_from_csv_file(file_name):
+def load_data_from_csv_file(file_name, dtype=int):
     # return np.genfromtxt(os.path.join(DATA_FILES_PATH,file_name), delimiter=',', dtype=int)
-    return pd.read_csv(os.path.join(DATA_FILES_PATH,file_name), dtype=int)
+    return pd.read_csv(os.path.join(DATA_FILES_PATH,file_name), dtype=dtype)
 
 
 
@@ -50,8 +51,10 @@ def show_menu():
     print("1. Extract 50 features")
     print("2. Run k-means")
     print("3. Discover the main affect features")
-    print("4. Run logistic Regression")
-    print("5. Run logistic Regression on histograms")
+    print("4. Run Logistic Regression")
+    print("5. Run Logistic Regression on histograms")
+    print("6. Run Logistic Regression with 80% train and 20% test")
+    print("9. Exit")
     choice = input(" >>  ")
     exec_menu(choice)
     return
@@ -130,7 +133,7 @@ def menu_run_logistic():
 def menu_run_logistic_on_histogram():
     print("menu_run_logistic_on_histogram")
     # get data from CSV
-    x_df = load_data_from_csv_file("x_data_window_50000.csv")
+    x_df = load_data_from_csv_file("x_data_histograms.csv", dtype=float)
     y_df = np.ravel(load_data_from_csv_file("y_data.csv"))
 
     logistic_object = LogisticRegression()
@@ -138,6 +141,41 @@ def menu_run_logistic_on_histogram():
     score = logistic_object.score(x_df, y_df)
 
     print("score: " + str(score))
+
+
+def menu_run_logistic_train_and_test():
+    print("menu_run_logistic")
+    # get data from CSV
+    x_df = load_data_from_csv_file("x_data_window_50000.csv")
+    y_df = np.ravel(load_data_from_csv_file("y_data.csv"))
+
+    sample_weigth = [10, 10, 10, 10, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    # init train size
+    train_size = int(len(x_df.index) * 0.8)
+
+    X_train = x_df.iloc[0:train_size]
+    X_test = x_df.iloc[train_size:]
+    y_train = y_df[0:train_size]
+    y_test = y_df[train_size:]
+
+    sample_weigth_train = sample_weigth[0:train_size]
+    sample_weigth_test = sample_weigth[train_size:]
+
+
+    logistic_object = LogisticRegression(solver='lbfgs')
+    logistic_object.fit(X_train, y_train, sample_weight=sample_weigth_train)
+    score = logistic_object.score(X_train, y_train, sample_weight=sample_weigth_train)
+    print("Training score: " + str(score))
+
+    # # predict the answers for X_test
+    # predicted = logistic_object.predict(X_test)
+    #
+    # # compare the predicted to true answers and return a accuracy score
+    # accuracy = metrics.accuracy_score(y_test, predicted)
+    accuracy = logistic_object.score(X_test, y_test, sample_weight=sample_weigth_test)
+    print("Testing score: " + str(accuracy))
+
 
 
 # Exit program
@@ -156,6 +194,7 @@ menu_actions = {
     '3': menu_discover_affect_features,
     '4': menu_run_logistic,
     '5': menu_run_logistic_on_histogram,
+    '6': menu_run_logistic_train_and_test,
     '9': exit,
 }
 
