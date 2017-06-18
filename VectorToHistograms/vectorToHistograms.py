@@ -90,14 +90,16 @@ def all_to_one_excel_file(paths, indexes, file_name):
     writer = pd.ExcelWriter(file_name, engine='xlsxwriter')
 
     df = pd.DataFrame()
-    df['index'] = indexes[:20]
+    df['index'] = indexes
 
     for path in paths:
         print("working on: ", path)
-        normalized_array = normalize(open_file(path))
+        # normalized_array = normalize(open_file(path))
+        normalized_array = normlize_vector(path)
+        histogram = make_histogram_from_df(normalized_array)
         # print(normalized_array)
         # print(path.split('\\')[-1])
-        df[path.split('\\')[-1]] = normalized_array
+        df[path.split('\\')[-1]] = histogram
 
     df.to_excel(writer, sheet_name='Sheet1', index=False)
     writer.save()
@@ -147,8 +149,9 @@ def make_test():
 
 if __name__ == '__main__':
     # index_names = create_index_names()
-    # ds = dirScanner("\\\\192.168.1.12\Public\FREEC_OUT2", "cpn")
-    # normal_paths, toumor_paths = ds.get_paths()
+    index_names = np.arange(-max_normalize, max_normalize + graph_jump, graph_jump)
+    ds = dirScanner("\\\\192.168.1.12\Public\FREEC_OUT2", "cpn")
+    normal_paths, toumor_paths = ds.get_paths()
 
     #  Option 1 - if we want to print each  cpn to excel file with graph.
 
@@ -163,13 +166,18 @@ if __name__ == '__main__':
     #     create_excel_file_with_graph(normalized_array, index_names, path.split('\\')[-1] + ".xlsx")
 
     # Option 2 - all cpn files are in one excel file without graph
-    # all_to_one_excel_file(normal_paths, index_names, "output_of_normal.xlsx")
-    # all_to_one_excel_file(toumor_paths, index_names, "output_of_toumor.xlsx")
+    all_to_one_excel_file(normal_paths, index_names, "output_of_normal.xlsx")
+    all_to_one_excel_file(toumor_paths, index_names, "output_of_toumor.xlsx")
 
-    norm_data = normlize_vector(
-        "\\\\192.168.1.12\\Public\\FREEC_OUT2\\OUT_ICGC\\id_8_ICGC_normal_FI51715\window100\\ICGC_normal_FI51715.bam_sample.cpn")
-    print(make_histogram_from_df(norm_data))
-    print(norm_data)
+    # test_arr = []
+    # test_path = "test.cpn"
+    # test_arr.append(test_path)
+    # test_arr.append(test_path)
+    # norm_data = normlize_vector(test_path)
+    # print(make_histogram_from_df(norm_data))
+    # print(norm_data)
+    # all_to_one_excel_file(test_arr, index_names, "test.xlsx")
+
     # Testings
     # make_test()
     #
