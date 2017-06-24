@@ -35,7 +35,7 @@ def save_all_data_to_CSVs():
     # np.savetxt(os.path.join(DATA_FILES_PATH, "x_data_window_100.csv"), x_data, delimiter=",", fmt='%10.5f', header=headers, comments="")
 
 
-def load_data_from_csv_file(file_name, dtype=int):
+def load_data_from_csv_file(file_name, dtype=float):
     # return np.genfromtxt(os.path.join(DATA_FILES_PATH,file_name), delimiter=',', dtype=int)
     return pd.read_csv(os.path.join(DATA_FILES_PATH,file_name), dtype=dtype)
 
@@ -54,6 +54,7 @@ def show_menu():
     print("4. Run Logistic Regression")
     print("5. Run Logistic Regression on histograms")
     print("6. Run Logistic Regression with 80% train and 20% test")
+    print("7. Print feature")
     print("8. Save to files")
     print("9. Exit")
     choice = input(" >>  ")
@@ -75,7 +76,7 @@ def exec_menu(choice):
 def menu_extract_features():
     print("menu_extract_features")
     # get data from CSV
-    x_df = load_data_from_csv_file("x_data_window_50000.csv")
+    x_df = load_data_from_csv_file("x_data_window_50000_normalized.csv")
     y_df = np.ravel(load_data_from_csv_file("y_data.csv"))
 
     logistic_object = LogisticRegression()
@@ -95,9 +96,9 @@ def menu_extract_features():
 def menu_k_means():
     print("menu_k_means")
     # get data from CSV
-    x_df = load_data_from_csv_file("x_data_window_50000.csv")
-
-    kmeans = KMeans(n_clusters=2)
+    x_df = load_data_from_csv_file("x_data_window_50000_normalized.csv")
+    # x_df = x_df.filter(regex=("^17_37.*"))
+    kmeans = KMeans(n_clusters=3)
     kmeans.fit(x_df)
     centroids = kmeans.cluster_centers_
     labels = kmeans.labels_
@@ -109,7 +110,7 @@ def menu_k_means():
 def menu_discover_affect_features():
     print("menu_discover_affect_features")
     # get data from CSV
-    x_df = load_data_from_csv_file("x_data_window_50000.csv")
+    x_df = load_data_from_csv_file("x_data_window_50000_normalized.csv")
     y_df = np.ravel(load_data_from_csv_file("y_data.csv"))
 
     extract_df = ExtractFeatures(x_df, y_df, num_of_features=1)
@@ -122,9 +123,14 @@ def menu_run_logistic():
     x_df = load_data_from_csv_file("x_data_window_50000.csv")
     y_df = np.ravel(load_data_from_csv_file("y_data.csv"))
 
+    sample_weigth = [10, 10, 10, 10, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+
+    x_df = x_df.filter(regex=("^17_37.*"))
+
     # logistic_object = LogisticRegression(class_weight={1: 0.9, 0: 0.1})
-    logistic_object = LogisticRegression()
-    logistic_object.fit(x_df, y_df)
+    logistic_object = LogisticRegression(solver='lbfgs')
+    logistic_object.fit(x_df, y_df, sample_weight=sample_weigth)
     score = logistic_object.score(x_df, y_df)
 
     print("score: " + str(score))
@@ -133,7 +139,7 @@ def menu_run_logistic():
 def menu_run_logistic_on_histogram():
     print("menu_run_logistic_on_histogram")
     # get data from CSV
-    x_df = load_data_from_csv_file("x_data_histograms.csv", dtype=float)
+    x_df = load_data_from_csv_file("x_data_histograms.csv")
     y_df = np.ravel(load_data_from_csv_file("y_data.csv"))
 
     logistic_object = LogisticRegression()
@@ -177,6 +183,22 @@ def menu_run_logistic_train_and_test():
     print("Testing score: " + str(accuracy))
 
 
+def menu_print_feature():
+    print("menu_print_feature")
+    f = open('../DataSavedInCSV/mean_features_tomur.txt', 'w')
+    x_df = load_data_from_csv_file("x_data_window_50000.csv")
+    print(x_df)
+    # new_df = x_df.ix[4:]
+    # # new_df = new_df.filter(regex=("^X_.*")).std()
+    # # print(new_df)
+    # # new_df.to_csv("std.csv")
+    # for feature in new_df:
+    #     mean = new_df[feature].mean()
+    #     if mean > 30000:
+    #         print(feature + "  " + str(mean))
+    #     # print(feature + "  " + str(mean))
+    #     f.write(feature + "  " + str(new_df[feature].mean()) + '\n')
+    # f.close()
 
 # Exit program
 def exit():
@@ -195,6 +217,7 @@ menu_actions = {
     '4': menu_run_logistic,
     '5': menu_run_logistic_on_histogram,
     '6': menu_run_logistic_train_and_test,
+    '7': menu_print_feature,
     '8': save_all_data_to_CSVs,
     '9': exit,
 }
@@ -205,9 +228,6 @@ menu_actions = {
 
 
 if __name__ == '__main__':
-    # # save all data to CSV files
-    # save_all_data_to_CSVs()
-
     # Launch main menu
     show_menu()
 

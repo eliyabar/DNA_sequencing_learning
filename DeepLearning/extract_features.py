@@ -34,8 +34,8 @@ class ExtractFeatures:
                     max_score = score
                     selected_feature = feature
                     print("Selected feature: " + selected_feature + ", score: " + str(score))
-                if score >= max_score:
-                    print("Feature: " + feature + ", score: " + str(score))
+                # if score >= 0.93:
+                #     print("Feature: " + feature + ", score: " + str(score))
 
             self._selected_features.append(selected_feature)
             # print("finish: ", self._selected_features)

@@ -34,10 +34,6 @@ class PrepareData:
             mean = np.mean(array)
         for i in range(len(array)):
             normalized_num = (array[i] - mean) / std
-            if normalized_num > self.NORMALIZE_CONSTANT:
-                normalized_num = self.NORMALIZE_CONSTANT
-            elif normalized_num < -self.NORMALIZE_CONSTANT:
-                normalized_num = -self.NORMALIZE_CONSTANT
             normalized_array[i] = normalized_num
 
         return normalized_array
