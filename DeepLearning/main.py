@@ -98,7 +98,7 @@ def menu_k_means():
     # get data from CSV
     x_df = load_data_from_csv_file("x_data_window_50000_normalized.csv")
     # x_df = x_df.filter(regex=("^17_37.*"))
-    kmeans = KMeans(n_clusters=3)
+    kmeans = KMeans(n_clusters=2)
     kmeans.fit(x_df)
     centroids = kmeans.cluster_centers_
     labels = kmeans.labels_
@@ -120,17 +120,17 @@ def menu_discover_affect_features():
 def menu_run_logistic():
     print("menu_run_logistic")
     # get data from CSV
-    x_df = load_data_from_csv_file("x_data_window_50000.csv")
+    x_df = load_data_from_csv_file("x_data_window_50000_normalized.csv")
     y_df = np.ravel(load_data_from_csv_file("y_data.csv"))
 
-    sample_weigth = [10, 10, 10, 10, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    sample_weight = [10, 10, 10, 10, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
-    x_df = x_df.filter(regex=("^17_37.*"))
+    # x_df = x_df.filter(regex=("^17_37.*"))
 
     # logistic_object = LogisticRegression(class_weight={1: 0.9, 0: 0.1})
     logistic_object = LogisticRegression(solver='lbfgs')
-    logistic_object.fit(x_df, y_df, sample_weight=sample_weigth)
+    logistic_object.fit(x_df, y_df, sample_weight=sample_weight)
     score = logistic_object.score(x_df, y_df)
 
     print("score: " + str(score))
@@ -155,7 +155,9 @@ def menu_run_logistic_train_and_test():
     x_df = load_data_from_csv_file("x_data_window_50000.csv")
     y_df = np.ravel(load_data_from_csv_file("y_data.csv"))
 
-    sample_weigth = [10, 10, 10, 10, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    # x_df = x_df.filter(regex=("^17_37.*"))
+
+    sample_weight = [10, 10, 10, 10, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     # init train size
     train_size = int(len(x_df.index) * 0.8)
@@ -165,9 +167,8 @@ def menu_run_logistic_train_and_test():
     y_train = y_df[0:train_size]
     y_test = y_df[train_size:]
 
-    sample_weigth_train = sample_weigth[0:train_size]
-    sample_weigth_test = sample_weigth[train_size:]
-
+    sample_weigth_train = sample_weight[0:train_size]
+    sample_weigth_test = sample_weight[train_size:]
 
     logistic_object = LogisticRegression(solver='lbfgs')
     logistic_object.fit(X_train, y_train, sample_weight=sample_weigth_train)
