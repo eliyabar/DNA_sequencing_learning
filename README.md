@@ -7,8 +7,12 @@
 This is a project about Machine Learning of NGS DNA samples from breast cancer patients using FREEC.
 Right now we are in Prototype stage, and just learning our tools before using the real data, so in this current code will mimic the real data and use PCA, Logistic Regression and Random Projection using sklearn library with python.
 
-## Files
-- main.py - will be the implementation of PCA, Logistic Regression and Random Projection.
-- res/Data_tar2.csv - will be large amount of data in csv file, to mimic the large amount of data we have in a single DNA file.
-- /Script To Hospital - will contain the script we built to extract the data from DNA files. 
-- /VectorToHistograms - Will convert SAMPLE file that was extracted from BAM file with FREEC to Histogram.
+## Directories
+- /DataSavedInCSV - CSV files that were generated from hospital results.
+- /DeepLearning - contains all the code that use Machine Learning for trying characterize tumor sample.
+- /Script To Hospital - contain the script we built to extract the data from DNA files at Hospital. 
+- /VectorToHistograms - convert SAMPLE file that was extracted from BAM file with FREEC to Histogram.
+- /custom FREEC 10.3 src - contain our custom FREEC for extracting the expected results from Hospital in minimum time.
+- /img - contains images for the git.
+- /res - contains results that presented in the report.
+- main.py - The implementation of PCA, Logistic Regression and Random Projection (Prototype stage).
